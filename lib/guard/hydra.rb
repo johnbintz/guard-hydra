@@ -37,14 +37,14 @@ class Guard::Hydra < Guard::Guard
   end
 
   def run_on_change(files = [])
-    files.uniq!
+    files = ensure_files(files)
     Guard::UI.info "Running Hydra on #{files.join(', ')}"
     run_all if run_hydra(files)
   end
 
   def run_all
     Guard::UI.info "Running Hydra on all matching tests..."
-    run_hydra(matching_tests)
+    run_hydra(ensure_files(matching_tests))
   end
 
   private
@@ -55,7 +55,7 @@ class Guard::Hydra < Guard::Guard
 
     hydra = Hydra::Master.new(
       :listeners => [ Hydra::Listener::ProgressBar.new ],
-      :files => files.uniq,
+      :files => files,
       :environment => @options[:env],
       :config => @options[:hydra_config]
     )
@@ -75,6 +75,24 @@ class Guard::Hydra < Guard::Guard
   end
 
   def matching_tests
-    Guard::Watcher.match_files(self, @options[:test_matchers].collect { |match| Dir[MATCHERS[match]] }.flatten).uniq
+    Guard::Watcher.match_files(self, match_test_matchers).uniq
+  end
+
+  def match_test_matchers(source = nil)
+    @options[:test_matchers].collect do |match| 
+      path = MATCHERS[match]
+      path = File.join(source, path) if source
+      Dir[path] 
+    end.flatten
+  end
+
+  def ensure_files(files = [])
+    files.collect do |file|
+      if File.directory?(file)
+        match_test_matchers(file)
+      else
+        file
+      end
+    end.flatten.find_all { |file| File.file?(file) }.uniq
   end
 end
