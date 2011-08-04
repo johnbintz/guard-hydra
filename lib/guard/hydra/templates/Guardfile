@@ -1,0 +1,4 @@
+guard 'hydra' do
+  # All spec files
+  watch(%r{spec/**/*_spec.rb})
+end

@@ -2,13 +2,13 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = "guard-rspec-hydra"
+  s.name        = "guard-hydra"
   s.version     = '0.0.1'
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
   s.homepage    = ""
-  s.summary     = %q{Extend Guard::RSpec to use Hydra to run all specs. Super-fast!}
-  s.description = %q{Extend Guard::RSpec to use Hydra to run all specs. Super-fast!}
+  s.summary     = %q{Use Hydra to run all specs. Super-fast!}
+  s.description = %q{Use Hydra to run all specs. Super-fast!}
 
   s.rubyforge_project = "guard-rspec-hydra"
 
@@ -18,5 +18,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'guard', '>= 0.5.0'
-  s.add_dependency 'guard-rspec'
+  s.add_dependency 'hydra'
 end
