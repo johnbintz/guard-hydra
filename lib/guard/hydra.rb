@@ -17,13 +17,22 @@ class Guard::Hydra < Guard::Guard
       :show_runner_log => true,
       :hydra_config => 'config/hydra.yml',
       :test_matchers => [ :rspec ],
-      :all_on_start => false
+      :all_on_start => false,
+      :env => 'test'
     }.merge(@options)
   end
 
   def start
     super
     Guard::UI.info "Guard::Hydra is waiting to run tests..."
+
+    begin
+      ENV['RAILS_ENV'] = @options[:env]
+      require rails_application
+    rescue LoadError
+      Guard::UI.info "Not a Rails app, using default environment settings"
+    end
+
     run_all if @options[:all_on_start]
   end
 
@@ -47,7 +56,7 @@ class Guard::Hydra < Guard::Guard
     hydra = Hydra::Master.new(
       :listeners => [ Hydra::Listener::ProgressBar.new ],
       :files => files.uniq,
-      :environment => 'test',
+      :environment => @options[:env],
       :config => @options[:hydra_config]
     )
 
