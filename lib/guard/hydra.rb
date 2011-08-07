@@ -33,13 +33,20 @@ class Guard::Hydra < Guard::Guard
       Guard::UI.info "Not a Rails app, using default environment settings"
     end
 
+    @did_fail = false
+
     run_all if @options[:all_on_start]
   end
 
   def run_on_change(files = [])
     if !(files = ensure_files(files)).empty?
       Guard::UI.info "Running Hydra on #{files.join(', ')}"
-      run_all if run_hydra(files)
+      if run_hydra(files)
+        run_all if @did_fail
+        @did_fail = false
+      else
+        @did_fail = true
+      end
     end
   end
 
