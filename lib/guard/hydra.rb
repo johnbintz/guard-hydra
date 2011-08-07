@@ -37,9 +37,10 @@ class Guard::Hydra < Guard::Guard
   end
 
   def run_on_change(files = [])
-    files = ensure_files(files)
-    Guard::UI.info "Running Hydra on #{files.join(', ')}"
-    run_all if run_hydra(files)
+    if !(files = ensure_files(files)).empty?
+      Guard::UI.info "Running Hydra on #{files.join(', ')}"
+      run_all if run_hydra(files)
+    end
   end
 
   def run_all
@@ -49,21 +50,26 @@ class Guard::Hydra < Guard::Guard
 
   private
   def run_hydra(files = [])
-    File.unlink @options[:runner_log] if runner_log? && @options[:clear_runner_log]
+    if !files.empty?
+      File.unlink @options[:runner_log] if runner_log? && @options[:clear_runner_log]
 
-    start = Time.now
+      start = Time.now
 
-    hydra = Hydra::Master.new(
-      :listeners => [ Hydra::Listener::ProgressBar.new ],
-      :files => files,
-      :environment => @options[:env],
-      :config => @options[:hydra_config]
-    )
+      hydra = Hydra::Master.new(
+        :listeners => [ Hydra::Listener::ProgressBar.new ],
+        :files => files,
+        :environment => @options[:env],
+        :config => @options[:hydra_config]
+      )
 
-    Guard::UI.info sprintf("Tests completed in %.6f seconds", Time.now - start)
+      Guard::UI.info sprintf("Tests completed in %.6f seconds", Time.now - start)
 
-    puts File.read(@options[:runner_log]) if runner_log? && @options[:show_runner_log]
-    hydra.failed_files.empty?
+      puts File.read(@options[:runner_log]) if runner_log? && @options[:show_runner_log]
+      hydra.failed_files.empty?
+    else
+      Guard::UI.info "No files matched!"
+      false
+    end
   end
 
   def runner_log?
