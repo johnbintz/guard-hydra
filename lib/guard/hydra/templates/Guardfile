@@ -1,4 +1,10 @@
 guard 'hydra' do
   # All spec files
-  watch(%r{spec/**/*_spec.rb})
+  watch(%r{^spec/**/*_spec.rb$})
+
+  # All lib files
+  watch(%r{^lib/(.*)\.rb$}) { |m| "spec/lib/#{m[1]}_spec.rb" }
+
+  # All app files for a Rails app
+  watch(%r{^app/(.*)\.rb$}) { |m| "spec/#{m[1]}_spec.rb" }
 end

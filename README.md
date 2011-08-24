@@ -1,6 +1,5 @@
 Use Guard with Hydra and get super-parallel test execution! Awesome!
 
-
 Options:
 
 * `:runner_log`: The location of the runner log where output is printed
