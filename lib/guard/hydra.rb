@@ -1,8 +1,17 @@
+p "made it"
+
 require 'guard'
+
+p "made it"
+
 require 'guard/guard'
 
+p "made it"
+
 require 'hydra'
+p "made it"
 require 'hydra/master'
+p "made it"
 
 class Guard::Hydra < Guard::Guard
   MATCHERS = {
