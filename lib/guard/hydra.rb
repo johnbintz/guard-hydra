@@ -1,17 +1,9 @@
-p "made it"
-
 require 'guard'
-
-p "made it"
 
 require 'guard/guard'
 
-p "made it"
-
 require 'hydra'
-p "made it"
 require 'hydra/master'
-p "made it"
 
 class Guard::Hydra < Guard::Guard
   MATCHERS = {
@@ -27,7 +19,8 @@ class Guard::Hydra < Guard::Guard
       :hydra_config => 'config/hydra.yml',
       :test_matchers => [ :rspec ],
       :all_on_start => false,
-      :env => 'test'
+      :env => 'test',
+      :verbose => false
     }.merge(@options)
   end
 
@@ -75,7 +68,8 @@ class Guard::Hydra < Guard::Guard
         :listeners => [ Hydra::Listener::ProgressBar.new ],
         :files => files,
         :environment => @options[:env],
-        :config => @options[:hydra_config]
+        :config => @options[:hydra_config],
+        :verbose => @options[:verbose]
       )
 
       Guard::UI.info sprintf("Tests completed in %.6f seconds", Time.now - start)
