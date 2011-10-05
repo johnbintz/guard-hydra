@@ -7,7 +7,8 @@ require 'hydra/master'
 
 class Guard::Hydra < Guard::Guard
   MATCHERS = {
-    :rspec => '**/*_spec.rb'
+    :rspec => '**/*_spec.rb',
+    :cucumber => '**/**/*{.feature}'
   }
 
   def initialize(watchers = [], options = {})
